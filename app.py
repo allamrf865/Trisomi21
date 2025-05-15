@@ -141,4 +141,3 @@ milestones_fig = px.pie(names=["Met", "Not Met"], values=[(patient_data['develop
                                                            (patient_data['developmental_milestones'] == "Not Met")],
                          title=f"Developmental Milestones of Patient {patient_id}")
 st.plotly_chart(milestones_fig)
-
