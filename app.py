@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import plotly.express as px
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Simulasi data untuk 71.890 pasien Down Syndrome
 np.random.seed(42)
@@ -121,23 +122,35 @@ st.write(f"**Age at First Diagnosis**: {patient_data['age_at_first_diagnosis']} 
 st.write(f"**Communication Skills**: {patient_data['communication_skills']}")
 st.write(f"**Educational Placement**: {patient_data['educational_placement']}")
 
-# Visualisasi Grafik
+# Visualisasi Grafik menggunakan Matplotlib dan Seaborn
 st.subheader("Grafik Visualisasi")
 
 # Weight Chart
-weight_fig = px.bar(x=["Weight"], y=[patient_data['weight']], title=f"Weight of Patient {patient_id}")
-st.plotly_chart(weight_fig)
+fig, ax = plt.subplots()
+ax.bar(["Weight"], [patient_data['weight']])
+ax.set_title(f"Weight of Patient {patient_id}")
+ax.set_ylabel("Weight (kg)")
+st.pyplot(fig)
 
 # KPSP Score Chart
-kpsp_fig = px.bar(x=["KPSP Score"], y=[patient_data['kpsp_score']], title=f"KPSP Score of Patient {patient_id}")
-st.plotly_chart(kpsp_fig)
+fig, ax = plt.subplots()
+ax.bar(["KPSP Score"], [patient_data['kpsp_score']])
+ax.set_title(f"KPSP Score of Patient {patient_id}")
+ax.set_ylabel("KPSP Score")
+st.pyplot(fig)
 
 # Survival Rate Chart
-survival_fig = px.bar(x=["Survival Rate"], y=[patient_data['survival_rate']], title=f"Survival Rate of Patient {patient_id}")
-st.plotly_chart(survival_fig)
+fig, ax = plt.subplots()
+ax.bar(["Survival Rate"], [patient_data['survival_rate']])
+ax.set_title(f"Survival Rate of Patient {patient_id}")
+ax.set_ylabel("Survival Rate (%)")
+st.pyplot(fig)
 
 # Developmental Milestones Pie Chart
-milestones_fig = px.pie(names=["Met", "Not Met"], values=[(patient_data['developmental_milestones'] == "Met"), 
-                                                           (patient_data['developmental_milestones'] == "Not Met")],
-                         title=f"Developmental Milestones of Patient {patient_id}")
-st.plotly_chart(milestones_fig)
+fig, ax = plt.subplots()
+labels = ["Met", "Not Met"]
+sizes = [(patient_data['developmental_milestones'] == "Met"), 
+         (patient_data['developmental_milestones'] == "Not Met")]
+ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
+ax.set_title(f"Developmental Milestones of Patient {patient_id}")
+st.pyplot(fig)
