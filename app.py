@@ -1,11 +1,7 @@
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
-from dash.dependencies import Input, Output
+import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-import plotly.graph_objects as go
 
 # Simulasi data untuk 71.890 pasien Down Syndrome
 np.random.seed(42)
@@ -81,67 +77,68 @@ df_simulation = pd.DataFrame({
     'educational_placement': educational_placement
 })
 
-# Membuat aplikasi Dash
-app = dash.Dash(__name__)
+# Judul dan Deskripsi
+st.title("Dashboard Perkembangan Anak Down Syndrome")
+st.write("Pilih salah satu pasien untuk melihat perkembangan mereka berdasarkan berbagai indikator.")
 
-# Layout Dash
-app.layout = html.Div([
-    html.H1("Dashboard Perkembangan Anak Down Syndrome"),
-    
-    html.Div([
-        dcc.Dropdown(
-            id='patient-dropdown',
-            options=[{'label': f"Patient {i}", 'value': i} for i in range(1, 11)],  # 10 pasien untuk contoh
-            value=1,
-            style={'width': '50%'}
-        )
-    ]),
-    
-    html.Div([
-        dcc.Graph(id='weight-graph'),
-        dcc.Graph(id='kpsp-graph'),
-        dcc.Graph(id='survival-rate-graph'),
-        dcc.Graph(id='developmental-milestones-graph'),
-        html.Div(id='patient-details')
-    ])
-])
+# Dropdown untuk memilih pasien
+patient_id = st.selectbox('Pilih Patient ID', df_simulation['patient_id'].head(10))
 
-# Callback untuk menampilkan detail pasien berdasarkan ID
-@app.callback(
-    [Output('patient-details', 'children'),
-     Output('weight-graph', 'figure'),
-     Output('kpsp-graph', 'figure'),
-     Output('survival-rate-graph', 'figure'),
-     Output('developmental-milestones-graph', 'figure')],
-    [Input('patient-dropdown', 'value')]
-)
-def display_patient_details(patient_id):
-    # Filter data untuk pasien yang dipilih
-    patient_data = df_simulation[df_simulation['patient_id'] == patient_id].iloc[0]
-    
-    # Tampilkan detail
-    details = [
-        html.H3(f"Detail Perkembangan Pasien {patient_id}"),
-        html.Div(f"Age: {patient_data['age']} years"),
-        html.Div(f"Weight: {patient_data['weight']} kg"),
-        html.Div(f"Height: {patient_data['height']} cm"),
-        html.Div(f"Developmental Milestones: {patient_data['developmental_milestones']}"),
-        html.Div(f"KPSP Score: {patient_data['kpsp_score']}"),
-        html.Div(f"Survival Rate: {patient_data['survival_rate']}%"),
-        html.Div(f"Motor Skills: {patient_data['motor_skills']}"),
-        html.Div(f"Speech: {patient_data['speech']}")
-    ]
-    
-    # Visualisasi data pasien
-    weight_fig = px.bar(x=["Weight"], y=[patient_data['weight']], title=f"Weight of Patient {patient_id}")
-    kpsp_fig = px.bar(x=["KPSP Score"], y=[patient_data['kpsp_score']], title=f"KPSP Score of Patient {patient_id}")
-    survival_fig = px.bar(x=["Survival Rate"], y=[patient_data['survival_rate']], title=f"Survival Rate of Patient {patient_id}")
-    milestones_fig = px.pie(names=["Met", "Not Met"], values=[(patient_data['developmental_milestones'] == "Met"), 
-                                                            (patient_data['developmental_milestones'] == "Not Met")],
-                            title=f"Developmental Milestones of Patient {patient_id}")
+# Filter data pasien
+patient_data = df_simulation[df_simulation['patient_id'] == patient_id].iloc[0]
 
-    return details, weight_fig, kpsp_fig, survival_fig, milestones_fig
+# Tampilkan detail pasien
+st.subheader(f"Detail Perkembangan Pasien {patient_id}")
+st.write(f"**Age**: {patient_data['age']} years")
+st.write(f"**Weight**: {patient_data['weight']} kg")
+st.write(f"**Height**: {patient_data['height']} cm")
+st.write(f"**Head Circumference**: {patient_data['head_circumference']} cm")
+st.write(f"**Developmental Milestones**: {patient_data['developmental_milestones']}")
+st.write(f"**Motor Skills**: {patient_data['motor_skills']}")
+st.write(f"**Speech**: {patient_data['speech']}")
+st.write(f"**KPSP Score**: {patient_data['kpsp_score']}")
+st.write(f"**Cognitive Functioning**: {patient_data['cognitive_functioning']}")
+st.write(f"**Hearing Impairment**: {patient_data['hearing_impairment']}")
+st.write(f"**Visual Impairment**: {patient_data['visual_impairment']}")
+st.write(f"**Heart Disease**: {patient_data['heart_disease']}")
+st.write(f"**Hypothyroidism**: {patient_data['hypothyroidism']}")
+st.write(f"**Surgical History**: {patient_data['surgical_history']}")
+st.write(f"**Vaccination Status**: {patient_data['vaccination_status']}")
+st.write(f"**Genetic Screening**: {patient_data['genetic_screening']}")
+st.write(f"**Survival Rate**: {patient_data['survival_rate']}%")
+st.write(f"**Age at Diagnosis**: {patient_data['age_at_diagnosis']} years")
+st.write(f"**Medication History**: {patient_data['medication_history']}")
+st.write(f"**Sleep Patterns**: {patient_data['sleep_patterns']}")
+st.write(f"**Social Behavior**: {patient_data['social_behavior']}")
+st.write(f"**Parental Support**: {patient_data['parental_support']}")
+st.write(f"**Speech Therapy**: {patient_data['speech_therapy']}")
+st.write(f"**Occupational Therapy**: {patient_data['occupational_therapy']}")
+st.write(f"**Physical Therapy**: {patient_data['physical_therapy']}")
+st.write(f"**Mental Health Issues**: {patient_data['mental_health_issues']}")
+st.write(f"**Nutritional Intake**: {patient_data['nutritional_intake']}")
+st.write(f"**Hospital Visits**: {patient_data['hospital_visits']}")
+st.write(f"**Age at First Diagnosis**: {patient_data['age_at_first_diagnosis']} years")
+st.write(f"**Communication Skills**: {patient_data['communication_skills']}")
+st.write(f"**Educational Placement**: {patient_data['educational_placement']}")
 
-# Menjalankan aplikasi
-if __name__ == '__main__':
-    app.run_server(debug=True)
+# Visualisasi Grafik
+st.subheader("Grafik Visualisasi")
+
+# Weight Chart
+weight_fig = px.bar(x=["Weight"], y=[patient_data['weight']], title=f"Weight of Patient {patient_id}")
+st.plotly_chart(weight_fig)
+
+# KPSP Score Chart
+kpsp_fig = px.bar(x=["KPSP Score"], y=[patient_data['kpsp_score']], title=f"KPSP Score of Patient {patient_id}")
+st.plotly_chart(kpsp_fig)
+
+# Survival Rate Chart
+survival_fig = px.bar(x=["Survival Rate"], y=[patient_data['survival_rate']], title=f"Survival Rate of Patient {patient_id}")
+st.plotly_chart(survival_fig)
+
+# Developmental Milestones Pie Chart
+milestones_fig = px.pie(names=["Met", "Not Met"], values=[(patient_data['developmental_milestones'] == "Met"), 
+                                                           (patient_data['developmental_milestones'] == "Not Met")],
+                         title=f"Developmental Milestones of Patient {patient_id}")
+st.plotly_chart(milestones_fig)
+
